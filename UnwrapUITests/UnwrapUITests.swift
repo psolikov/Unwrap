@@ -76,4 +76,91 @@ class UnwrapUITests: XCTestCase {
         XCTAssert(app.navigationBars["Credits"].exists)
     }
 
+    //Check that Learn activity opens and "Glossary" and "Learn" buttons work
+    func testLearnActivity() {
+        let app = XCUIApplication()
+        let tabBarsQuery = XCUIApplication().tabBars
+
+        XCTAssertTrue(!app.buttons["Glossary"].exists)
+
+        tabBarsQuery.buttons["Learn"].tap()
+
+        XCTAssertTrue(app.buttons["Glossary"].exists)
+
+        app.buttons["Glossary"].tap()
+
+        XCTAssertTrue(app.buttons["Learn"].exists)
+
+        app.buttons["Learn"].firstMatch.tap()
+
+        XCTAssertTrue(app.buttons["Glossary"].exists)
+    }
+
+    //Check that practice activity and alerts are working
+    func testPracticeActivity() {
+        let app = XCUIApplication()
+        let tabBarsQuery = XCUIApplication().tabBars
+
+        tabBarsQuery.buttons["Practice"].tap()
+
+        print(app.debugDescription)
+
+        app.staticTexts["Free Coding"].tap()
+
+        XCTAssert(app.alerts["Activity Locked"].exists)
+
+        app.alerts["Activity Locked"].buttons["OK"].tap()
+
+        XCTAssert(!app.alerts["Activity Locked"].exists)
+    }
+
+    //Check that Next button works
+    func testLearnNext() {
+        let app = XCUIApplication()
+        let tabBarsQuery = XCUIApplication().tabBars
+
+        tabBarsQuery.buttons["Learn"].tap()
+
+        XCTAssert(app.staticTexts["Simple Types"].exists)
+        XCTAssert(app.staticTexts["Variables"].exists)
+
+        app.staticTexts["Variables"].tap()
+
+        XCTAssert(app.navigationBars.firstMatch.exists)
+        XCTAssert(app.navigationBars.firstMatch.otherElements["Variables"].exists)
+
+        app.navigationBars.firstMatch.otherElements["Variables"].tap()
+
+        XCTAssert(app.buttons["Next"].exists)
+        XCTAssert(!app.staticTexts["Variables"].exists)
+        XCTAssert(!app.buttons["OK"].exists)
+
+        app.buttons["Next"].tap()
+
+        XCTAssert(app.staticTexts["Variables"].exists)
+        XCTAssert(app.buttons["OK"].exists)
+
+        app.buttons["OK"].tap()
+        //Todo Check hint and skip
+//        XCTAssert(app.buttons["Hint"].exists)
+        print(app.debugDescription)
+    }
+
+    func testBuySwiftBooksLink() {
+        let app = XCUIApplication()
+        let tabBarsQuery = app.tabBars
+
+        tabBarsQuery.buttons["News"].tap()
+
+        XCTAssert(app.buttons["Buy Swift Books"].exists)
+
+        app.buttons["Buy Swift Books"].tap()
+
+        XCTAssert(app.buttons["Done"].exists)
+
+        app.buttons["Done"].tap()
+
+        XCTAssert(app.navigationBars["News"].exists)
+    }
+
 }
